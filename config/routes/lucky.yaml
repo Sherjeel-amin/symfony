@@ -1,0 +1,4 @@
+# config/routes/lucky.yaml
+lucky_number:
+    path: /lucky/number
+    controller: App\Controller\LuckyController::number
