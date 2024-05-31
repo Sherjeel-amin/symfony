@@ -1,6 +1,5 @@
 <?php
-
-//src/Controller/LuckyController.php
+// src/Controller/LuckyController.php
 namespace App\Controller;
 
 // use Symfony\Component\Routing\Attribute\Route;

@@ -274,5 +274,3 @@
 //     <p>Current route parameters: {{ app.request.attributes.get('_route_params')|json_encode }}</p>
 
 // This is how you can access and use route information in your Symfony application. It helps in debugging, logging, or making decisions based on the current route.
-
-
