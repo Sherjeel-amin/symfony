@@ -208,3 +208,121 @@ throw new \Exception('Something went wrong!');
 In every case, an error page is shown to the end user and a full debug error page is shown to the developer (i.e. when you're in "Debug" mode - see Configuring Symfony).
 
 To customize the error page that's shown to the user, see the How to Customize Error Pages article. -->
+
+
+<!-- ========================================= Request object ======================================================
+
+The Request object as a Controller Argument
+What if you need to read query parameters, grab a request header or get access to an uploaded file? That information is stored in Symfony's Request object. To access it in your controller, add it as an argument and type-hint it with the Request class:
+
+ Copy
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+// ...
+
+public function index(Request $request): Response
+{
+    $page = $request->query->get('page', 1);
+
+    // ...
+}
+Keep reading for more information about using the Request object. -->
+<!-- 
+$request->query: This gives you access to the query parameters (the part of the URL after the ?).
+get('page', 1): This method fetches the value of the page parameter. The second argument (1) is the default value to return if the page parameter is not present. -->
+
+<!-- ================================================ mapping ======================================================  -->
+
+<!-- A DTO is a simple class that holds data. We will create a DTO to store user information: first name, last name, and age. We will also add some validation rules to ensure the data is correct.
+UserDto Class
+
+    Create the class file: src/Model/UserDto.php
+    Define the class with validation rules:
+
+php
+
+namespace App\Model;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+class UserDto
+{
+    public function __construct(
+        #[Assert\NotBlank]
+        public string $firstName,
+
+        #[Assert\NotBlank]
+        public string $lastName,
+
+        #[Assert\GreaterThan(18)]
+        public int $age,
+    ) {
+    }
+}
+
+    firstName and lastName should not be blank.
+    age must be greater than 18.
+
+Step 2: Using the DTO in a Controller
+
+Next, we'll use this DTO in a controller method to automatically map the query parameters to the DTO.
+UserController Class
+
+    Create the controller file: src/Controller/UserController.php
+    Define the controller method:
+
+php
+
+namespace App\Controller;
+
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use App\Model\UserDto;
+
+class UserController
+{
+    public function dashboard(#[MapQueryString] UserDto $userDto): Response
+    {
+        // Use the DTO properties
+        $content = sprintf(
+            "Hello, %s %s. You are %d years old.",
+            $userDto->firstName,
+            $userDto->lastName,
+            $userDto->age
+        );
+
+        return new Response($content);
+    }
+} -->
+
+<!-- ================================= Handling sessions =====================================================
+
+-->
+<!-- You can store special messages, called "flash" messages, on the user's session. By design, flash messages are meant to be used exactly once: they vanish from the session automatically as soon as you retrieve them. This feature makes "flash" messages particularly great for storing user notifications.
+
+For example, imagine you're processing a form submission:
+
+ Copy
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+// ...
+
+public function update(Request $request): Response
+{
+    // ...
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // do some sort of processing
+
+        $this->addFlash(
+            'notice',
+            'Your changes were saved!'
+        );
+        // $this->addFlash() is equivalent to $request->getSession()->getFlashBag()->add()
+
+        return $this->redirectToRoute(/* ... */);
+    }
+
+    return $this->render(/* ... */); -->
+<!-- } -->
+
