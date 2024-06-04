@@ -1,6 +1,6 @@
 <!-- A common need for templates is to print the values stored in the templates passed from the controller or service. Variables usually store objects and arrays instead of strings, numbers and boolean values. That's why Twig provides quick access to complex PHP variables. Consider the following template:
 
-Copy
+
 <p>{{ user.name }} added this comment on {{ comment.publishedAt|date }}</p>
 The user.name notation means that you want to display some information (name) stored in a variable (user). Is user an array or an object? Is name a property or a method? In Twig this doesn't matter.
 
@@ -89,7 +89,9 @@ twig
 
     {{ url('blog_index') }}: Generates the full URL for the homepage. -->
 
-<!-- 
+<!--     ===================================== Linking ==========================================
+
+
     Linking to CSS, JavaScript and Image Assets
 If a template needs to link to a static asset (e.g. an image), Symfony provides an asset() Twig function to help generate that URL. First, install the asset package:
 
@@ -106,6 +108,67 @@ You can now use the asset() function:
 {# the JS file lives at "public/bundles/acme/js/loader.js" #}
 <script src="{{ asset('bundles/acme/js/loader.js') }}"></script>
 The asset() function's main purpose is to make your application more portable. If your application lives at the root of your host (e.g. https://example.com), then the rendered path should be /images/logo.png. But if your application lives in a subdirectory (e.g. https://example.com/my_app), each asset path should render with the subdirectory (e.g. /my_app/images/logo.png). The asset() function takes care of this by determining how your application is being used and generating the correct paths accordingly. -->
+
+
+<!-- =============================================== Twig Components ================================================== 
+Twig components are an alternative way to render templates, where each template is bound to a "component class". This makes it easier to render and re-use small template "units" - like an alert, markup for a modal, or a category sidebar.
+
+For more information, see UX Twig Component.
+
+Twig components also have one other superpower: they can become "live", where they automatically update (via Ajax) as the user interacts with them. For example, when your user types into a box, your Twig component will re-render via Ajax to show a list of results!
+-->
+
+<!-- ======================================= Debugging templates ======================================================= -->
+
+<!-- Symfony provides several utilities to help you debug issues in your templates.
+
+Linting Twig Templates
+The lint:twig command checks that your Twig templates don't have any syntax errors. It's useful to run it before deploying your application to production (e.g. in your continuous integration server):
+
+
+php bin/console lint:twig
+
+
+php bin/console lint:twig templates/email/
+php bin/console lint:twig templates/article/recent_list.html.twig
+
+
+php bin/console lint:twig --show-deprecations templates/email/
+
+
+php bin/console lint:twig templates/ --excludes=data_collector --excludes=dev_tool
+7.1
+The option to exclude directories was introduced in Symfony 7.1.
+
+When running the linter inside GitHub Actions, the output is automatically adapted to the format required by GitHub, but you can force that format too: -->
+
+<!-- ===================================== Check if template exists ======================================================= -->
+<!-- 
+Checking if a Template Exists
+Templates are loaded in the application using a Twig template loader, which also provides a method to check for template existence. First, get the loader:
+
+use Twig\Environment;
+
+class YourService
+{
+    // this code assumes that your service uses autowiring to inject dependencies
+    // otherwise, inject the service called 'twig' manually
+    public function __construct(Environment $twig)
+    {
+        $loader = $twig->getLoader();
+    }
+}
+Then, pass the path of the Twig template to the exists() method of the loader:
+
+if ($loader->exists('theme/layout_responsive.html.twig')) {
+    // the template exists, do something
+    // ...
+} -->
+
+
+
+
+
 
 
 
